@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>🪙 Coin Flip Game - Login</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <!-- Login & Signup Section -->
+  <div id="authSection" class="auth-container">
+    <h2>Welcome to Coin Flip Game</h2>
+
+    <div id="authForms">
+      <!-- Login Form -->
+      <form id="loginForm" class="auth-form">
+        <h3>Login</h3>
+        <input type="email" id="loginEmail" placeholder="Email" required />
+        <input type="password" id="loginPassword" placeholder="Password" required />
+        <button type="submit" id="loginBtn">Login</button>
+        <p class="auth-switch-text">
+          Don't have an account? 
+          <a href="#" id="showSignup">Sign Up</a>
+        </p>
+        <p class="forgot-password">
+          <a href="#" id="showReset">Forgot Password?</a>
+        </p>
+      </form>
+
+      <!-- Signup Form -->
+      <form id="signupForm" class="auth-form hidden">
+        <h3>Sign Up</h3>
+        <input type="email" id="signupEmail" placeholder="Email" required />
+        <input type="password" id="signupPassword" placeholder="Password" required minlength="6" />
+        <input type="password" id="signupPasswordConfirm" placeholder="Confirm Password" required minlength="6" />
+        <button type="submit" id="signupBtn">Sign Up</button>
+        <p class="auth-switch-text">
+          Already have an account? 
+          <a href="#" id="showLogin">Login</a>
+        </p>
+      </form>
+
+      <!-- Password Reset Form -->
+      <form id="resetForm" class="auth-form hidden">
+        <h3>Reset Password</h3>
+        <input type="email" id="resetEmail" placeholder="Enter your email" required />
+        <button type="submit" id="resetBtn">Send Reset Link</button>
+        <p class="auth-switch-text">
+          Remembered your password? 
+          <a href="#" id="showLoginFromReset">Login</a>
+        </p>
+      </form>
+    </div>
+
+    <div id="authMessage" class="auth-message"></div>
+  </div>
+
+  <!-- Main Game Section (Hidden initially) -->
+  <div id="gameContainer" class="container hidden">
+    <h1>🪙 Coin Flip Game</h1>
+
+    <!-- Balance and Settings -->
+    <div class="balance-section">
+      <div class="balance-main">
+        <label for="balanceType">Balance:</label>
+        <select id="balanceType">
+          <option value="main" selected>Live</option>
+          <option value="demo">Demo</option>
+        </select>
+        <strong>৳<span id="balanceAmount">0</span></strong>
+        <button class="deposit-btn-small" id="depositSmallBtn">Deposit</button>
+      </div>
+      <div class="settings-menu-wrapper">
+        <button id="settingsBtn">&#8942;</button>
+        <div id="settingsDropdown" class="settings-dropdown">
+          <a href="#" id="withdrawOption">WITHDRAW</a>
+          <a href="#" id="transactionHistoryOption">Transaction History</a>
+          <a href="#" id="logoutBtn">Logout</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Demo Balance Update -->
+    <div class="section" id="demoBalanceSection" style="display:none;">
+      <label>Demo Balance:</label>
+      <input type="number" id="demoSet" value="5000" min="0" />
+      <button class="action-button" id="updateDemoBtn">Update Demo</button>
+    </div>
+
+    <!-- Coin Image -->
+    <div id="coin" title="Click to flip the coin">
+      <img
+        id="coinImg"
+        src="https://i.ibb.co/Q3dkRFfs/Messenger-creation-7-FFB321-B-18-EF-4-A11-9897-5-F4550078-D25.jpg"
+        width="100"
+        height="100"
+        style="border-radius: 50%;"
+        alt="coin"
+      />
+    </div>
+
+    <!-- Choice Buttons -->
+    <div class="section">
+      <h3>Choose HEAD or TAIL</h3>
+      <div class="coin-buttons">
+        <button id="headBtn">HEAD</button>
+        <button id="tailBtn">TAIL</button>
+      </div>
+    </div>
+
+    <!-- Bet Amount Buttons -->
+    <div class="section">
+      <h3>Select Bet Amount</h3>
+      <div class="bet-amounts" id="betAmounts"></div>
+    </div>
+
+    <!-- Flip Button -->
+    <button class="action-button" id="flipBtn">Flip Now</button>
+    <div id="countdown" style="text-align:center; font-size:20px; margin-top:10px;"></div>
+
+    <!-- Bet History -->
+    <div class="section">
+      <h3>Bet History</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Choice</th>
+            <th>Result</th>
+            <th>Bet</th>
+            <th>Win/Loss</th>
+          </tr>
+        </thead>
+        <tbody id="historyBody"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Deposit Popup -->
+  <div id="depositPopup" class="popup-overlay">
+    <div class="popup-content">
+      <h3>Deposit Request</h3>
+      <input type="number" id="depositAmount" placeholder="Amount" />
+      <input type="text" id="depositMobile" placeholder="Mobile Number" />
+      <input type="text" id="depositTxnNo" placeholder="Transaction No" />
+      <select id="depositMethod">
+        <option value="" disabled selected>Select Method</option>
+        <option value="Bkash">Bkash</option>
+        <option value="Nagad">Nagad</option>
+        <option value="Rocket">Rocket</option>
+      </select>
+      <div id="depositSuccess" style="display:none; color: green; margin-top: 10px;">
+        Deposit request submitted!
+      </div>
+      <button id="submitDeposit" class="action-button">Submit</button>
+      <button id="closeDeposit" class="cancel-button">Cancel</button>
+    </div>
+  </div>
+
+  <!-- Withdraw Popup -->
+  <div id="withdrawPopup" class="popup-overlay">
+    <div class="popup-content">
+      <h3>Withdraw Request</h3>
+      <input type="number" id="withdrawAmount" placeholder="Amount" />
+      <input type="text" id="withdrawMobile" placeholder="Mobile Number" />
+      <select id="withdrawMethod">
+        <option value="" disabled selected>Select Method</option>
+        <option value="Bkash">Bkash</option>
+        <option value="Nagad">Nagad</option>
+        <option value="Rocket">Rocket</option>
+      </select>
+      <div id="withdrawSuccess" style="display:none; color: green; margin-top: 10px;">
+        Withdraw request submitted!
+      </div>
+      <button id="submitWithdraw" class="action-button">Submit</button>
+      <button id="closeWithdraw" class="cancel-button">Cancel</button>
+    </div>
+  </div>
+
+  <!-- Transaction History Popup -->
+  <div id="transactionPopup" class="popup-overlay">
+    <div class="popup-content transaction-content">
+      <h3>Transaction History</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>Type</th>
+            <th>Amount</th>
+            <th>Status</th>
+            <th>Date</th>
+          </tr>
+        </thead>
+        <tbody id="transactionBody"></tbody>
+      </table>
+      <button id="closeTransaction" class="cancel-button">Close</button>
+    </div>
+  </div>
+
+  <!-- Messages -->
+  <div id="messageDiv" class="message-div"></div>
+
+  <!-- Sounds -->
+  <audio id="winSound" src="https://actions.google.com/sounds/v1/cartoon/clang_and_wobble.ogg"></audio>
+  <audio id="loseSound" src="https://actions.google.com/sounds/v1/cartoon/boing.ogg"></audio>
+
+  <!-- Firebase SDKs -->
+  <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-database-compat.js"></script>
+
+  <!-- Firebase Config -->
+  <script>
+    const firebaseConfig = {
+      apiKey: "AIzaSyAD7UbvwZ22BWZn-KKTaibaUxe6pTvNKD8",
+      authDomain: "coin-flit-game.firebaseapp.com",
+      databaseURL: "https://coin-flit-game-default-rtdb.firebaseio.com",
+      projectId: "coin-flit-game",
+      storageBucket: "coin-flit-game.firebasestorage.app",
+      messagingSenderId: "994232004899",
+      appId: "1:994232004899:web:dfd958e948ab0e9f591c96",
+      measurementId: "G-TQ11P3FNL3"
+    };
+    firebase.initializeApp(firebaseConfig);
+  </script>
+
+  <!-- Your JS -->
+  <script src="game.js"></script>
+</body>
+</html>
